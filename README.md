@@ -3,7 +3,7 @@ DevSecOps Web App - README
 
 This project is a minimal full-stack Node.js + Express web app using MongoDB, demonstrating best practices in DevSecOps including:
 
-- Secrets Management
+- Secrets Management("For simplicity, secrets are stored securely using .env and dotenv. In a production environment, these would be managed using a proper secrets manager like AWS Secrets Manager or Vault.")
 - Dockerized Deployment
 - CI/CD with GitHub Actions
 - Vulnerability Scanning using Trivy
