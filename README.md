@@ -1,27 +1,62 @@
 
-DevSecOps Web App - README
+DevSecOps Web App - Setup Instructions
 
-This project is a minimal full-stack Node.js + Express web app using MongoDB, demonstrating best practices in DevSecOps including:
+Project Overview:
+This is a minimal Node.js and Express web application with MongoDB, designed to demonstrate DevSecOps best practices. The project integrates containerization, security scanning, secrets management, and infrastructure as code principles.
 
-- Secrets Management("For simplicity, secrets are stored securely using .env and dotenv. In a production environment, these would be managed using a proper secrets manager like AWS Secrets Manager or Vault.")
-- Dockerized Deployment
-- CI/CD with GitHub Actions
-- Vulnerability Scanning using Trivy
-- Infrastructure as Code (IaC) using Terraform
-- Security scanning of IaC using tfsec
-- API testing with Postman
+Tech Stack:
+Node.js
+Express
+MongoDB (via Docker)
+Docker and Docker Compose
+GitHub Actions for CI/CD
+Trivy for vulnerability scanning
+Terraform and tfsec for infrastructure hardening
 
-Tech Stack
-----------
-- Node.js + Express
-- MongoDB (via Docker)
-- Docker & Docker Compose
-- GitHub Actions (CI/CD)
-- dotenv for secrets management
-- Trivy (security scanning)
-- Terraform (local dummy infra)
-- tfsec (IaC security checks)
-- Postman (API testing)
+Prerequisites:
+Install Docker Desktop
+Install Node.js and npm
+Install Git
+Install Trivy (https://aquasecurity.github.io/trivy/)
+Optional: Install Terraform and tfsec
+
+Project Setup Steps:
+1. Clone the repository from GitHub
+2. Navigate to the project directory
+3. Create a file named .env in the root folder with the following content:
+MONGO_URI equals mongodb://mongo:27017/webappdb
+JWT_SECRET equals your_secret_key
+PORT equals 3000
+4. Build and start the app using Docker Compose:
+docker-compose build
+docker-compose up -d
+5. The app will be running at http://localhost:3000
+
+API Endpoints:
+GET /users - Retrieve all users
+POST /users - Create a new user with name, email, and password
+POST /login - Authenticate and receive a JWT token
+
+Testing:
+Use Postman to test the above endpoints
+Ensure MongoDB is reachable and running inside Docker
+
+Security Scanning:
+Run Trivy to scan the file system and Docker image:
+trivy fs .
+trivy image web-app-app
+
+GitHub Actions:
+GitHub Actions is configured via .github/workflows/sec.yml
+On every push, Trivy scan is triggered automatically
+
+Secrets Management:
+Sensitive values like database URI, JWT secret, and port are stored in the .env file
+dotenv is used to load them securely into the app
+
+Infrastructure Hardening:
+A local Terraform file is included in the terraform directory for demonstration
+tfsec was used to scan it, and 2 high-severity issues were flagged
 
 Folder Structure
 ----------------
@@ -39,69 +74,11 @@ web-app/
 ├── terraform/
 │   └── main.tf              # IaC config (local AWS dummy)
 
-Features
---------
-- JWT-based user login
-- Password hashing (bcrypt)
-- MongoDB integration using Docker
-- GitHub Actions pipeline for CI/CD
-- Trivy scan for vulnerabilities
-- tfsec scan for infrastructure hardening
-- API tested with Postman
+Note:
+No secrets are committed into GitHub
+Trivy reported no critical vulnerabilities after the final image build
+You can rerun the Docker and Trivy steps if you make code changes
 
-Setup Instructions
-------------------
-
-Prerequisites:
-- Docker Desktop
-- Node.js
-- Git
-- Trivy
-- Terraform
-
-Installation & Run
-------------------
-1. Clone the repository:
-   git clone https://github.com/YourUsername/web-app.git
-   cd web-app
-
-2. Create your .env file:
-   MONGO_URI=mongodb://mongo:27017/webappdb
-   JWT_SECRET=supersecretkey
-   PORT=3000
-
-3. Build and start containers:
-   docker-compose build
-   docker-compose up -d
-
-The app will be running at: http://localhost:3000
-
-API Endpoints
--------------
-
-Register User (POST /users)
-{
-  "name": "Alice",
-  "email": "alice@example.com",
-  "password": "securepass"
-}
-
-Login (POST /login)
-{
-  "email": "alice@example.com",
-  "password": "securepass"
-}
-
-Get Users (GET /users)
-
-Security Scanning
------------------
-Run Trivy scans:
-   trivy fs .
-   trivy image web-app-app
-
-Run tfsec scan:
-   cd terraform
-   tfsec
-
-This README summarizes your DevSecOps-ready application.
+Final Check:
+Make sure the containers are up by running:
+docker ps
